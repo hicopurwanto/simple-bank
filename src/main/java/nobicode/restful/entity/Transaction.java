@@ -11,11 +11,10 @@ import lombok.*;
 public class Transaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
-    @Column(name = "account_id")
-    private String accountId;
+    @Column(name = "to_account")
+    private String toAccount;
 
     private String amount;
 

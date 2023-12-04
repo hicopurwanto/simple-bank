@@ -1,36 +1,37 @@
-CREATE DATABASE contactmanager;
+# Query for mySQL
 
-USE contactmanager;
+## Create Database
+CREATE DATABASE simplebank;
 
-CREATE TABLE users (
-    username VARCHAR(100) NOT NULL,
-    password VARCHAR(100) NOT NULL,
-    name VARCHAR(100) NOT NULL,
-    token VARCHAR(100),
-    token_expired_at BIGINT,
+## Create Table Users
+CREATE TABLE users
+(
+    username			VARCHAR(100) NOT NULL,
+    passwords			VARCHAR(100) NOT NULL,
+    name             	VARCHAR(100) NOT NULL,
+    token            	VARCHAR(100),
+    token_expired_at 	BIGINT,
     PRIMARY KEY (username),
     UNIQUE (token)
-);
+) ENGINE InnoDB;
 
-CREATE TABLE contacts (
-    id VARCHAR(100) NOT NULL,
-    username VARCHAR(100) NOT NULL,
-    first_name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100),
-    phone VARCHAR(100),
-    email VARCHAR(100),
+## Create Table Accounts
+CREATE TABLE accounts
+(
+    id					VARCHAR(100) NOT NULL,
+    username			VARCHAR(100) NOT NULL,
+    account_number		VARCHAR(100) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY fk_users_contacts (username) REFERENCES users (username)
-);
+    FOREIGN KEY fk_users_accounts (username) REFERENCES users (username)
+) ENGINE InnoDB;
 
-CREATE TABLE addresses (
-    id VARCHAR(100) NOT NULL,
-    contact_id VARCHAR(100) NOT NULL,
-    street VARCHAR(200),
-    city VARCHAR(100),
-    province VARCHAR(100),
-    country VARCHAR(100) NOT NULL,
-    postal_code VARCHAR(100),
+## Create Table Transactions
+CREATE TABLE transactions
+(
+    id					VARCHAR(100) NOT NULL,
+    account_id			VARCHAR(100) NOT NULL,
+    to_account			VARCHAR(100) NOT NULL,
+    amount				VARCHAR(100) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY fk_contacts_addresses (contact_id) REFERENCES contacts (id)
-);
+    FOREIGN KEY fk_accounts_transactions (account_id) REFERENCES accounts (id)
+) ENGINE InnoDB;

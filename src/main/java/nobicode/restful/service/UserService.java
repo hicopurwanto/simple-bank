@@ -1,6 +1,8 @@
 package nobicode.restful.service;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import nobicode.restful.dto.UserResponse;
 import nobicode.restful.entity.User;
 import nobicode.restful.dto.RegisterUserRequest;
 import nobicode.restful.repository.UserRepository;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@Slf4j
 public class UserService {
 
     @Autowired
@@ -29,9 +32,16 @@ public class UserService {
 
         User user = new User();
         user.setUsername(request.getUsername());
-        user.setPasswords(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
+        user.setPasswords(BCrypt.hashpw(request.getPasswords(), BCrypt.gensalt()));
         user.setName(request.getName());
 
         userRepository.save(user);
+    }
+
+    public UserResponse get(User user) {
+        return UserResponse.builder()
+                .username(user.getUsername())
+                .name(user.getName())
+                .build();
     }
 }

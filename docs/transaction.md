@@ -1,53 +1,8 @@
-# Address API Spec
+# Transaction API Spec
 
-## Create Address
+## Create Transactions
 
-Endpoint : POST api/contacts/{idContact}/addresses
-
-Request Header :
-- X-API-TOKEN : Token (Mandatory)
-
-Request Body :
-```json
-{
-  "street" : "Jalan Apa",
-  "city" : "Kota",
-  "province" : "Provinsi",
-  "country" : "Negara",
-  "postalCode" : "123456"
-}
-```
-
-Response Body (Berhasil) :
-```json
-{
-  "data" : {
-    "id" : "random-string",
-    "street" : "Jalan Apa",
-    "city" : "Kota",
-    "province" : "Provinsi",
-    "country" : "Negara",
-    "postalCode" : "123456"
-  } 
-}
-```
-
-Response Body (Gagal) :
-```json
-{
-  "error": "Unauthorized"
-}
-```
-
-```json
-{
-  "error": "data contact tidak ditemukan"
-}
-```
-
-## Update Address
-
-Endpoint : PUT api/contacts/{idContact}/addresses/{idAddress}
+Endpoint : POST api/transactions/{idAccount}/transactions
 
 Request Header :
 - X-API-TOKEN : Token (Mandatory)
@@ -55,11 +10,8 @@ Request Header :
 Request Body :
 ```json
 {
-  "street" : "Jalan Apa",
-  "city" : "Kota",
-  "province" : "Provinsi",
-  "country" : "Negara",
-  "postalCode" : "123456"
+  "toAccountId" : 1111111118,   // number
+  "amount" : 100000           // number
 }
 ```
 
@@ -67,12 +19,10 @@ Response Body (Berhasil) :
 ```json
 {
   "data" : {
-    "id" : "random-string",
-    "street" : "Jalan Apa",
-    "city" : "Kota",
-    "province" : "Provinsi",
-    "country" : "Negara",
-    "postalCode" : "123456"
+    "id" : 1,
+    "accountId" : 1111111119,
+    "toAccountId" : 1111111118,
+    "amount" : 100000
   } 
 }
 ```
@@ -83,70 +33,17 @@ Response Body (Gagal) :
   "error": "Unauthorized"
 }
 ```
-```json
-{
-  "error": "data address tidak ditemukan"
-}
-```
-
-## Get Address
-
-Endpoint : GET api/contacts/{idContact}/addresses/{idAddress}
-
-Request Header :
-- X-API-TOKEN : Token (Mandatory)
-
-Response Body (Berhasil) :
-```json
-{
-  "data" : {
-    "id" : "random-string",
-    "street" : "Jalan Apa",
-    "city" : "Kota",
-    "province" : "Provinsi",
-    "country" : "Negara",
-    "postalCode" : "123456"
-  } 
-}
-```
-
-Response Body (Gagal) :
-```json
-{
-  "error": "Unauthorized"
-}
-```
-```json
-{
-  "error": "data address tidak ditemukan"
-}
-```
-
-## Remove Address
-
-Endpoint : DELETE api/contacts/{idContact}/addresses/{idAddress}
-
-Request Header :
-- X-API-TOKEN : Token (Mandatory)
-
-Response Body (Berhasil) :
-```json
-{
-  "data" : "OK"
-}
-```
-
-Response Body (Gagal) :
 
 ```json
 {
-  "errors" : "data address tidak ditemukan"
+  "error": "data account tidak ditemukan"
 }
 ```
 
-## List Address
 
-Endpoint : GET api/contacts/{idContact}/addresses
+## List Transactions
+
+Endpoint : GET api/transactions/{idTransaction}/transactions
 
 Request Header :
 - X-API-TOKEN : Token (Mandatory)
@@ -156,12 +53,10 @@ Response Body (Berhasil) :
 {
   "data" : [
     {
-      "id" : "random-string",
-      "street" : "Jalan Apa",
-      "city" : "Kota",
-      "province" : "Provinsi",
-      "country" : "Negara",
-      "postalCode" : "123456"
+      "id" : 1,
+      "accountId" : 1111111119,
+      "toAccountId" : 1111111118,
+      "amount" : 100000
     }
   ] 
 }
@@ -175,6 +70,6 @@ Response Body (Gagal) :
 ```
 ```json
 {
-  "error": "data contact tidak ditemukan"
+  "error": "data Transactions tidak ditemukan"
 }
 ```

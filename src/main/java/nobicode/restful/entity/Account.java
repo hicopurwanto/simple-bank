@@ -13,19 +13,15 @@ import java.util.List;
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
-    @Column(name = "user_id")
-    private Long userId;
-
     @Column(name = "account_number")
-    private Long accountNumber;
+    private String accountNumber;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "username", referencedColumnName = "username")
     private User user;
 
-    @OneToMany(mappedBy = "contact")
+    @OneToMany(mappedBy = "account")
     private List<Transaction> transactions;
 }
