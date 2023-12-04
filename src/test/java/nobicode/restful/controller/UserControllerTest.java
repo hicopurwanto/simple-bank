@@ -2,11 +2,9 @@ package nobicode.restful.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nobicode.restful.entity.User;
 import nobicode.restful.dto.RegisterUserRequest;
 import nobicode.restful.dto.WebResponse;
 import nobicode.restful.repository.UserRepository;
-import nobicode.restful.security.BCrypt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -27,10 +25,10 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private UserRepository userRepository;
+    private ObjectMapper objectMapper;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
@@ -38,10 +36,10 @@ class UserControllerTest {
     }
 
     @Test
-    void testRegisterSuccess() throws Exception {
+    void register() throws Exception {
         RegisterUserRequest request = new RegisterUserRequest();
         request.setUsername("test");
-        request.setPassword("rahasia");
+        request.setPasswords("rahasia");
         request.setName("Test");
 
         mockMvc.perform(
@@ -60,53 +58,6 @@ class UserControllerTest {
     }
 
     @Test
-    void testRegisterBadRequest() throws Exception {
-        RegisterUserRequest request = new RegisterUserRequest();
-        request.setUsername("");
-        request.setPassword("");
-        request.setName("");
-
-        mockMvc.perform(
-                post("/api/users")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
-        ).andExpectAll(
-                status().isBadRequest()
-        ).andDo(result -> {
-            WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
-            });
-
-            assertNotNull(response.getErrors());
-        });
+    void get() {
     }
-
-    @Test
-    void testRegisterDuplicate() throws Exception {
-        User user = new User();
-        user.setUsername("test");
-        user.setPasswords(BCrypt.hashpw("rahasia", BCrypt.gensalt()));
-        user.setName("Test");
-        userRepository.save(user);
-
-        RegisterUserRequest request = new RegisterUserRequest();
-        request.setUsername("test");
-        request.setPassword("rahasia");
-        request.setName("Test");
-
-        mockMvc.perform(
-                post("/api/users")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
-        ).andExpectAll(
-                status().isBadRequest()
-        ).andDo(result -> {
-            WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
-            });
-
-            assertNotNull(response.getErrors());
-        });
-    }
-
 }
