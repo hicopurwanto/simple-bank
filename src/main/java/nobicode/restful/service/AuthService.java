@@ -29,7 +29,7 @@ public class AuthService {
         User user = userRepository.findById(request.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "username atau password salah"));
 
-        if(BCrypt.checkpw(request.getPassword(), user.getPasswords())) {
+        if(BCrypt.checkpw(request.getPasswords(), user.getPasswords())) {
             // sukses
             user.setToken(UUID.randomUUID().toString());
             user.setTokenExpiredAt(next30Days());
