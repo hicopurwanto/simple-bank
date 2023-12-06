@@ -1,11 +1,12 @@
 # simple-bank
-simple bank application using java spring boot
-aplikasi seederhana untuk
+Simple bank application using java spring boot.
 
-Menggunakan versi Java 17
-Menggunakan Database MySQL
+Aplikasi sederhana seputar pengelolaan User, Akun, dan Transaksi.
+
+Menggunakan versi Java 17.
+Menggunakan Database MySQL.
 
 Next Update:
-1. menampilkan transaksi yang dikelompokan setiap bulan.
-2. pembatasan nilai transaksi akun/hari.
-3. penambahan Dockerfile untuk kebutuhan pembuatan Docker Image yang digunakan dalam arsitektur Microservices.
+1. Menampilkan transaksi yang dikelompokan setiap bulan.
+2. Pembatasan nilai transaksi akun/hari.
+3. Penambahan Dockerfile untuk kebutuhan pembuatan Docker Image yang digunakan dalam arsitektur Microservices.
