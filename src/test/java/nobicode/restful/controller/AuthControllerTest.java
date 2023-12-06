@@ -15,8 +15,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-//import static org.springframework.test.web.servlet.ResultActions.*;
-//import static org.springframework.test.web.servlet.ResultHandler.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -117,6 +115,49 @@ class AuthControllerTest {
             assertNotNull(userDb);
             assertEquals(userDb.getToken(), response.getData().getToken());
             assertEquals(userDb.getTokenExpiredAt(), response.getData().getExpiredAt());
+        });
+    }
+
+    @Test
+    void logoutFailed() throws Exception{
+        mockMvc.perform(
+                delete("/api/auth/logout")
+                        .accept(MediaType.APPLICATION_JSON_VALUE)
+        ).andExpectAll(
+                status().isUnauthorized()
+        ).andDo(result -> {
+            WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+            assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void logoutSuccess() throws Exception{
+        User user = new User();
+        user.setUsername("hiko");
+        user.setName("Hiko");
+        user.setPasswords(BCrypt.hashpw("test", BCrypt.gensalt()));
+        user.setToken("test");
+        user.setTokenExpiredAt(System.currentTimeMillis() + 1000000000L);
+        userRepository.save(user);
+
+        mockMvc.perform(
+                delete("/api/auth/logout")
+                        .accept(MediaType.APPLICATION_JSON_VALUE)
+                        .header("X-API-TOKEN", "test")
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+            WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+            assertNull(response.getErrors());
+            assertEquals("OK", response.getData());
+
+            User userDb = userRepository.findById("hiko").orElse(null);
+            assertNotNull(userDb);
+            assertNull(userDb.getToken());
+            assertNull(userDb.getTokenExpiredAt());
         });
     }
 

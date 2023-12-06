@@ -2,6 +2,7 @@ package nobicode.restful.service;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import nobicode.restful.dto.UpdateUserRequest;
 import nobicode.restful.dto.UserResponse;
 import nobicode.restful.entity.User;
 import nobicode.restful.dto.RegisterUserRequest;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -44,4 +47,29 @@ public class UserService {
                 .name(user.getName())
                 .build();
     }
+
+    @Transactional
+    public UserResponse update(User user, UpdateUserRequest request) {
+        validationService.validate(request);
+        log.info("REQUEST : {}", request);
+
+        // cek apakah name kosong? kalau tidak berarti lakukan update
+        if(Objects.nonNull(request.getName())) {
+            user.setName(request.getName());
+        }
+
+        // cek apakah password kosong? kalau tidak berarti lakukan update
+        if(Objects.nonNull(request.getPasswords())) {
+            user.setPasswords(BCrypt.hashpw(request.getPasswords(), BCrypt.gensalt()));
+        }
+
+        userRepository.save(user);
+        log.info("USER : {}", user.getName());
+
+        return UserResponse.builder()
+                .name(user.getName())
+                .username(user.getUsername())
+                .build();
+    }
+
 }

@@ -10,8 +10,8 @@ Request Header :
 Request Body :
 ```json
 {
-  "userId" : "userhico",
-  "accountNumber" : 1111111119    // sequence
+  "username" : "userhico",
+  "accountNumber" : "1111111119"    // sequence
 }
 ```
 
@@ -19,9 +19,9 @@ Response Body (Berhasil) :
 ```json
 {
   "data" : {
-    "id" : 1,               // auto-increment
-    "userId" : "userhico",
-    "accountNumber" : 1111111119
+    "id" : "1",               // sequence
+    "username" : "userhico",
+    "accountNumber" : "1111111119"
   }
 }
 ```
@@ -45,9 +45,9 @@ Response Body (Berhasil) :
 ```json
 {
   "data" : {
-    "id" : 1,
-    "userId" : "userhico",
-    "accountNumber" : 1111111119
+    "id" : "1",
+    "username" : "userhico",
+    "accountNumber" : "1111111119"
   }
 }
 ```
