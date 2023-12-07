@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -157,6 +158,51 @@ class TransactionControllerTest {
             assertEquals(transaction.getId(), response.getData().getId());
             assertEquals(transaction.getToAccount(), response.getData().getToAccount());
             assertEquals(transaction.getAmount(), response.getData().getAmount());
+        });
+    }
+
+    @Test
+    void listTransactionNotFound() throws Exception{
+        mockMvc.perform(
+                get("/api/accounts/idsalah/transactions")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-API-TOKEN", "test")
+        ).andExpectAll(
+                status().isNotFound()
+        ).andDo(result -> {
+            WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void listTransactionSuccess() throws Exception{
+        Account account = accountRepository.findById("hiko").orElseThrow();
+
+        for (int i = 0; i < 5; i++) {
+            Transaction transaction = new Transaction();
+            transaction.setId("hiko-" + i);
+            transaction.setAccount(account);
+            transaction.setToAccount("0000000003");
+            transaction.setAmount("3000000");
+            transactionRepository.save(transaction);
+        }
+
+        mockMvc.perform(
+                get("/api/accounts/hiko/transactions")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-API-TOKEN", "test")
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+            WebResponse<List<TransactionResponse>> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+            assertNull(response.getErrors());
+            assertEquals(5, response.getData().size());
         });
     }
 

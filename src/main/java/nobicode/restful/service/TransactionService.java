@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -53,6 +54,15 @@ public class TransactionService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "transaksi tidak ditemukan"));
 
         return toTransactionsResponse(transactions);
+    }
+
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public List<TransactionResponse> list(User user, String accountId) {
+        Account account = accountRepository.findFirstByUserAndId(user, accountId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "kontak tidak ditemukan"));
+
+        List<Transaction> transactions = transactionRepository.findAllByAccount(account);
+        return transactions.stream().map(this::toTransactionsResponse).toList();
     }
 
     private TransactionResponse toTransactionsResponse(Transaction transactions) {
