@@ -34,9 +34,9 @@ public class TransactionController {
             path = "/api/accounts/{accountId}/transactions/{transactionId}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public WebResponse<TransactionResponse> list(User user,
-                                                 @PathVariable("accountId") String accountId,
-                                                 @PathVariable("transactionId") String transactionId) {
+    public WebResponse<TransactionResponse> get(User user,
+                                                @PathVariable("accountId") String accountId,
+                                                @PathVariable("transactionId") String transactionId) {
 
         TransactionResponse transactionResponse = transactionService.get(user, accountId, transactionId);
         return WebResponse.<TransactionResponse>builder().data(transactionResponse).build();
